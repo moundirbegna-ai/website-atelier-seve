@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BY SEVE | Art & Gold</title>
+    
+    <!-- Polices d'écriture Luxe -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Montserrat:wght@300;400;500&family=Pinyon+Script&display=swap" rel="stylesheet">
+    
+    <!-- GSAP pour les animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <!-- Lenis pour le Smooth Scroll -->
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
+
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --gold-light: #F3E5AB;
+            --black: #0a0a0a;
+            --charcoal: #1c1c1c;
+            --white: #f4f4f4;
+            --font-serif: 'Cinzel', serif;
+            --font-sans: 'Montserrat', sans-serif;
+            --font-script: 'Pinyon Script', cursive;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--black);
+            color: var(--white);
+            font-family: var(--font-sans);
+            overflow-x: hidden;
+            cursor: none; /* Custom cursor */
+        }
+
+        /* Custom Cursor */
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 1px solid var(--gold);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s;
+            mix-blend-mode: difference;
+        }
+        .cursor-dot {
+            width: 4px;
+            height: 4px;
+            background: var(--gold);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        a { text-decoration: none; color: inherit; cursor: none; }
+        ul { list-style: none; }
+
+        /* Typography */
+        h1, h2, h3 {
+            font-family: var(--font-serif);
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .gold-text {
+            color: var(--gold);
+            background: linear-gradient(45deg, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+            padding-bottom: 20px;
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 1px;
+            background: var(--gold);
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 2rem 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            mix-blend-mode: difference;
+            transition: transform 0.3s ease;
+        }
+
+        .logo {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+        }
+
+        nav ul {
+            display: flex;
+            gap: 3rem;
+        }
+
+        nav li a {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            position: relative;
+        }
+
+        nav li a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--gold);
+            transition: width 0.3s ease;
+        }
+        nav li a:hover::after { width: 100%; }
+
+        .lang-switch {
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Placeholder image abstract gold/black */
+            background-image: url('https://images.unsplash.com/photo-1634449571010-0238940f91a8?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.4;
+            z-index: -1;
+            transform: scale(1.1);
+        }
+
+        .hero h1 {
+            font-size: 6vw;
+            line-height: 1;
+            margin-bottom: 1rem;
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        .hero p {
+            font-family: var(--font-script);
+            font-size: 2rem;
+            color: var(--gold);
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        /* About Section */
+        .about {
+            padding: 10rem 10%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .about-img {
+            width: 100%;
+            height: 600px;
+            object-fit: cover;
+            filter: grayscale(100%);
+            transition: filter 0.5s ease;
+        }
+        .about-img:hover { filter: grayscale(0%); }
+
+        .about-text h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+        }
+        .about-text p {
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            color: #ccc;
+            font-weight: 300;
+        }
+
+        /* Collections Grid */
+        .collections {
+            padding: 5rem 5%;
+        }
+
+        .category-filter {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+        .filter-btn {
+            background: none;
+            border: 1px solid transparent;
+            color: var(--white);
+            padding: 10px 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            cursor: none;
+            transition: all 0.3s;
+        }
+        .filter-btn.active, .filter-btn:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            position: relative;
+            background: var(--charcoal);
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+        .card:hover { transform: translateY(-10px); }
+
+        .card-img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        .card:hover .card-img { transform: scale(1.05); }
+
+        .card-info {
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .card-title {
+            font-family: var(--font-serif);
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-meta {
+            font-size: 0.8rem;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+        }
+
+        .card-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            border: 1px solid var(--white);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            transition: all 0.3s;
+        }
+        .card-btn:hover {
+            background: var(--gold);
+            border-color: var(--gold);
+            color: var(--black);
+        }
+
+        .sold-out {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        .sold-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--white);
+            color: var(--black);
+            padding: 5px 10px;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+        }
+
+        /* Zensugi Section */
+        .zensugi {
+            background: #111;
+            padding: 8rem 10%;
+            border-top: 1px solid #333;
+            border-bottom: 1px solid #333;
+            text-align: center;
+        }
+        .zensugi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+        .zen-card {
+            border: 1px solid #333;
+            padding: 2rem;
+            transition: 0.3s;
+        }
+        .zen-card:hover { border-color: var(--gold); }
+
+        /* Exhibitions & Press */
+        .exhibitions {
+            padding: 8rem 15%;
+        }
+        .timeline-item {
+            border-left: 1px solid var(--gold);
+            padding-left: 2rem;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -5px;
+            top: 0;
+            width: 9px;
+            height: 9px;
+            background: var(--gold);
+            border-radius: 50%;
+        }
+        .date {
+            font-family: var(--font-sans);
+            font-weight: 600;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        /* Contact & Newsletter */
+        .contact-section {
+            padding: 6rem 10%;
+            background: #050505;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        input, textarea {
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #333;
+            padding: 1rem 0;
+            color: var(--white);
+            font-family: var(--font-sans);
+            font-size: 1rem;
+        }
+        input:focus, textarea:focus {
+            outline: none;
+            border-bottom-color: var(--gold);
+        }
+        button[type="submit"] {
+            background: var(--gold);
+            color: var(--black);
+            border: none;
+            padding: 1rem 3rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            font-weight: 600;
+            cursor: none;
+            align-self: flex-start;
+            margin-top: 1rem;
+        }
+
+        /* Footer */
+        footer {
+            padding: 4rem 5%;
+            border-top: 1px solid #222;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            font-size: 0.8rem;
+            color: #666;
+        }
+        .socials a {
+            margin-left: 1rem;
+            font-size: 1.2rem;
+            transition: color 0.3s;
+        }
+        .socials a:hover { color: var(--gold); }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 1000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: var(--charcoal);
+            padding: 3rem;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            border: 1px solid var(--gold);
+        }
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .about, .contact-section { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 12vw; }
+            header { padding: 1.5rem; }
+            nav { display: none; } /* Mobile menu simplified for this demo */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+    <div class="cursor-dot"></div>
+
+    <!-- Header -->
+    <header>
+        <div class="logo">BY SEVE</div>
+        <nav>
+            <ul>
+                <li><a href="#about" data-fr="L'Artiste" data-en="The Artist">L'Artiste</a></li>
+                <li><a href="#collections" data-fr="Collections" data-en="Collections">Collections</a></li>
+                <li><a href="#zensugi" data-fr="Zensugi" data-en="Zensugi">Zensugi</a></li>
+                <li><a href="#exhibitions" data-fr="Expositions" data-en="Exhibitions">Expositions</a></li>
+                <li><a href="#contact" data-fr="Contact" data-en="Contact">Contact</a></li>
+            </ul>
+        </nav>
+        <div class="lang-switch" onclick="toggleLanguage()">FR / EN</div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <h1 class="gold-text">BY SEVE</h1>
+        <p data-fr="Bienvenue dans mon univers" data-en="Welcome to my universe">Bienvenue dans mon univers</p>
+    </section>
+
+    <!-- About -->
+    <section id="about" class="about">
+        <img src="https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?q=80&w=1919&auto=format&fit=crop" alt="Seve Artist" class="about-img">
+        <div class="about-text">
+            <h2 data-fr="Biographie" data-en="Biography">Biographie</h2>
+            <p data-fr="Dès l’enfance, Sève trouve refuge dans un imaginaire créatif débordant. Elle s’inspire du vivant pour créer, entre contemplation et fascination. Son œuvre, remarquée à l'hôpital Trousseau et soutenue par Madame Chirac, illustre les vertus de l'art." 
+               data-en="Since childhood, Seve has found refuge in an overflowing creative imagination. She draws inspiration from the living world to create, between contemplation and fascination. Her work, noticed at Trousseau Hospital and supported by Madame Chirac, illustrates the virtues of art.">
+               Dès l’enfance, Sève trouve refuge dans un imaginaire créatif débordant...
+            </p>
+            <h2 data-fr="Démarche Artistique" data-en="Artistic Approach" style="margin-top: 2rem;">Démarche Artistique</h2>
+            <p data-fr="L’artiste Sève nous plonge dans une atmosphère défragmentée entre réalisme et abstraction. Les fissures et éclats d’or sont une véritable métaphore au cœur du vivant. Femmes et biodiversité cohabitent parfaitement dans cet ensemble d’œuvres sculptées et peintes."
+               data-en="Artist Seve plunges us into a defragmented atmosphere between realism and abstraction. The cracks and shards of gold are a true metaphor at the heart of the living. Women and biodiversity coexist perfectly in this set of sculpted and painted works.">
+               L’artiste Sève nous plonge dans une atmosphère défragmentée...
+            </p>
+        </div>
+    </section>
+
+    <!-- Collections -->
+    <section id="collections" class="collections">
+        <h2 class="section-title" data-fr="Œuvres d'Art" data-en="Artworks">Œuvres d'Art</h2>
+        
+        <div class="category-filter">
+            <button class="filter-btn active" onclick="filterSelection('all')">Tout</button>
+            <button class="filter-btn" onclick="filterSelection('femmes')">Femmes</button>
+            <button class="filter-btn" onclick="filterSelection('felins')">Félins</button>
+            <button class="filter-btn" onclick="filterSelection('sauvages')">Animaux Sauvages</button>
+            <button class="filter-btn" onclick="filterSelection('sculpture')">Sculptures</button>
+            <button class="filter-btn" onclick="filterSelection('soie')">Soie</button>
+        </div>
+
+        <div class="grid">
+            <!-- Femmes -->
+            <div class="card filter-item femmes">
+                <img src="https://images.unsplash.com/photo-1536924940846-227afb31e2a5?auto=format&fit=crop&w=600&q=80" class="card-img" alt="Adèle">
+                <div class="card-info">
+                    <h3 class="card-title">Adèle</h3>
+                    <div class="card-meta">50x50cm | Or 22 Carats</div>
+                    <a href="#" class="card-btn" onclick="openModal('Adèle')">Réserver</a>
+                </div>
+            </div>
+            <div class="card filter-item femmes sold-out">
+                <div class="sold-badge">Vendu</div>
+                <img src="https://images.unsplash.com/photo-1549887534-1541e9326642?auto=format&fit=crop&w=600&q=80" class="card-img" alt="Délicatesse">
+                <div class="card-info">
+                    <h3 class="card-title">Délicatesse</h3>
+                    <div class="card-meta">100x100cm | Or 22 Carats</div>
+                    <a href="#" class="card-btn">Commander une variation</a>
+                </div>
+            </div>
+
+            <!-- Félins -->
+            <div class="card filter-item felins">
+                <img src="https://images.unsplash.com/photo-1614027164847-1b28cfe1df60?auto=format&fit=crop&w=600&q=80" class="card-img" alt="Hâteya Tigre">
+                <div class="card-info">
+                    <h3 class="card-title">Hâteya Tigre</h3>
+                    <div class="card-meta">50x100cm | Or 22 Carats</div>
+                    <a href="#" class="card-btn" onclick="openModal('Hâteya Tigre')">Réserver</a>
+                </div>
+            </div>
+
+            <!-- Sauvages -->
+            <div class="card filter-item sauvages">
+                <img src="https://images.unsplash.com/photo-1574068468668-a05a11f871da?auto=format&fit=crop&w=600&q=80" class="card-img" alt="Oneïda Panda">
+                <div class="card-info">
+                    <h3 class="card-title">Oneïda</h3>
+                    <div class="card-meta">100x100cm | Panda de Chine</div>
+                    <a href="#" class="card-btn" onclick="openModal('Oneïda')">Réserver</a>
+                </div>
+            </div>
+            <div class="card filter-item sauvages">
+                <img src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=600&q=80" class="card-img" alt="Oméga Baleine">
+                <div class="card-info">
+                    <h3 class="card-title">Oméga</h3>
+                    <div class="card-meta">50x100cm | Baleine Bleue</div>
+                    <a href="#" class="card-btn" onclick="openModal('Oméga')">Réserver</a>
+                </div>
+            </div>
+
+            <!-- Sculptures -->
+            <div class="card filter-item sculpture">
+                <img src="https://images.unsplash.com/photo-1553655646-4f6a8c685886?auto=format&fit=crop&w=600&q=80" class="card-img" alt="Symphonie Alba">
+                <div class="card-info">
+                    <h3 class="card-title">Symphonie Alba</h3>
+                    <div class="card-meta">Bronze | Duo de Baleines</div>
+                    <a href="#" class="card-btn" onclick="openModal('Symphonie Alba')">Prix sur demande</a>
+                </div>
+            </div>
+
+            <!-- Soie -->
+            <div class="card filter-item soie">
+                <img src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=600&q=80" class="card-img" alt="Carré Soie Oneïda">
+                <div class="card-info">
+                    <h3 class="card-title">Carré Oneïda</h3>
+                    <div class="card-meta">Soie Véritable France</div>
+                    <div style="margin-bottom:10px; color:var(--gold);">420 €</div>
+                    <a href="#" class="card-btn" onclick="openModal('Carré Soie Oneïda')">Commander</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Zensugi Universe -->
+    <section id="zensugi" class="zensugi">
+        <h2 class="gold-text" style="font-family: var(--font-script); font-size: 4rem;">L'Univers Zensugi</h2>
+        <p style="max-width: 600px; margin: 2rem auto; color: #ccc;" data-fr="L'art de sublimer les imperfections. Une approche innovante alliant art, méditation et bien-être." data-en="The art of sublimating imperfections. An innovative approach combining art, meditation and well-being.">
+            L'art de sublimer les imperfections. Une approche innovante alliant art, méditation et bien-être.
+        </p>
+        
+        <div class="zensugi-grid">
+            <div class="zen-card">
+                <h3>Découverte</h3>
+                <p style="margin: 1rem 0; color: #888;">Thématique Florale, Tutos & PDF</p>
+                <div style="font-size: 1.5rem; color: var(--gold); margin-bottom: 1rem;">77 €</div>
+                <a href="https://www.atelierzenart.com/methode-zensugi-c5bd7a65" target="_blank" class="card-btn">Découvrir</a>
+            </div>
+            <div class="zen-card">
+                <h3>Trésors de l'Océan</h3>
+                <p style="margin: 1rem 0; color: #888;">+3h de vidéos, 70 motifs marins</p>
+                <div style="font-size: 1.5rem; color: var(--gold); margin-bottom: 1rem;">97 €</div>
+                <a href="https://www.atelierzenart.com/methode-secret-de-locean" target="_blank" class="card-btn">Découvrir</a>
+            </div>
+            <div class="zen-card">
+                <h3>Escale au Japon</h3>
+                <p style="margin: 1rem 0; color: #888;">Motifs exclusifs, 7 vidéos guidées</p>
+                <div style="font-size: 1.5rem; color: var(--gold); margin-bottom: 1rem;">177 €</div>
+                <a href="https://www.atelierzenart.com/methode-escaleaujapon" target="_blank" class="card-btn">Découvrir</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Exhibitions -->
+    <section id="exhibitions" class="exhibitions">
+        <h2 class="section-title" data-fr="Expositions & Presse" data-en="Exhibitions & Press">Expositions & Presse</h2>
+        
+        <div class="timeline-item">
+            <span class="date">Nov 2025</span>
+            <h3>Hotel Kergorlay Langsdorff Paris 16ème</h3>
+            <p>Rencontre de l’art et de l’élégance. Gala de charité.</p>
+        </div>
+        <div class="timeline-item">
+            <span class="date">Oct 2025</span>
+            <h3>Château Paris Boulogne</h3>
+            <p>Gala de charité pour la fondation Marraine de coeur.</p>
+        </div>
+        <div class="timeline-item">
+            <span class="date">Oct - Nov 2024</span>
+            <h3>Caen Galerie des arts</h3>
+            <p>Exposition aux côtés de Frédérique Assaël.</p>
+        </div>
+        <div class="timeline-item">
+            <span class="date">2023</span>
+            <h3>International Awards</h3>
+            <p>Médaille de Platine Académie des Arts - Sciences et Lettres Paris.</p>
+            <p>International Contemporary Art Exhibition (Tokyo, Seoul).</p>
+        </div>
+    </section>
+
+    <!-- Contact & Newsletter -->
+    <section id="contact" class="contact-section">
+        <div>
+            <h2 style="margin-bottom: 2rem;">Contact</h2>
+            <p style="margin-bottom: 2rem; color: #999;">
+                Pour toute acquisition, commande spéciale ou information.<br>
+                <span style="color: var(--gold);">sevefabrehamon@gmail.com</span>
+            </p>
+            <h3 style="margin-top: 3rem; margin-bottom: 1rem;">Newsletter</h3>
+            <p style="margin-bottom: 1.5rem; font-size: 0.9rem;">Rejoignez les collectionneurs privés.</p>
+            <form>
+                <input type="email" placeholder="Votre Email" required>
+                <button type="submit">S'inscrire</button>
+            </form>
+        </div>
+        <div>
+            <h2 style="margin-bottom: 2rem;">Message</h2>
+            <form action="mailto:sevefhshop@gmail.com" method="post" enctype="text/plain">
+                <input type="text" name="name" placeholder="Nom & Prénom" required>
+                <input type="email" name="email" placeholder="Email" required>
+                <textarea name="message" rows="5" placeholder="Votre message ou nom de l'œuvre..."></textarea>
+                <button type="submit">Envoyer</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div>
+            &copy; 2025 BY SEVE. Tous droits réservés.<br>
+            <span style="font-size: 0.7rem; color: #444;">kauedh-bh.myshopify.com</span>
+        </div>
+        <div class="socials">
+            <a href="https://instagram.com/seve_fh" target="_blank">IG: @seve_fh</a>
+            <a href="https://instagram.com/zensugi_" target="_blank">IG: @zensugi_</a>
+            <a href="#">FB</a>
+        </div>
+    </footer>
+
+    <!-- Modal de Réservation -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <h3 style="margin-bottom: 1.5rem; color: var(--gold);">Réserver une œuvre</h3>
+            <p id="modal-artwork-name" style="margin-bottom: 1.5rem; font-style: italic;"></p>
+            <form action="mailto:sevefhshop@gmail.com" method="post" enctype="text/plain">
+                <input type="hidden" id="artwork-input" name="artwork">
+                <input type="text" name="name" placeholder="Votre Nom" required>
+                <input type="email" name="email" placeholder="Votre Email" required>
+                <input type="tel" name="phone" placeholder="Téléphone (Optionnel)">
+                <textarea name="message" rows="3" placeholder="Message..."></textarea>
+                <button type="submit" style="width: 100%;">Envoyer la demande</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lenis Smooth Scroll
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            direction: 'vertical',
+            gestureDirection: 'vertical',
+            smooth: true,
+            mouseMultiplier: 1,
+            smoothTouch: false,
+            touchMultiplier: 2,
+        });
+
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        // Custom Cursor Logic
+        const cursor = document.querySelector('.cursor');
+        const cursorDot = document.querySelector('.cursor-dot');
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            cursorDot.style.left = e.clientX + 'px';
+            cursorDot.style.top = e.clientY + 'px';
+        });
+
+        document.addEventListener('mousedown', () => {
+            cursor.style.transform = 'scale(0.8)';
+        });
+        document.addEventListener('mouseup', () => {
+            cursor.style.transform = 'scale(1)';
+        });
+
+        // GSAP Animations
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Hero Animation
+        gsap.to(".hero h1", { opacity: 1, y: 0, duration: 1.5, delay: 0.5, ease: "power4.out" });
+        gsap.to(".hero p", { opacity: 1, y: 0, duration: 1.5, delay: 0.8, ease: "power4.out" });
+        
+        // Parallax Hero Background
+        gsap.to(".hero-bg", {
+            yPercent: 30,
+            ease: "none",
+            scrollTrigger: {
+                trigger: ".hero",
+                start: "top top",
+                end: "bottom top",
+                scrub: true
+            }
+        });
+
+        // Fade in sections
+        gsap.utils.toArray('.section-title, .about-text, .card, .timeline-item').forEach(element => {
+            gsap.from(element, {
+                scrollTrigger: {
+                    trigger: element,
+                    start: "top 85%",
+                    toggleActions: "play none none reverse"
+                },
+                y: 50,
+                opacity: 0,
+                duration: 1,
+                ease: "power3.out"
+            });
+        });
+
+        // Filter Logic
+        function filterSelection(c) {
+            var x, i;
+            x = document.getElementsByClassName("filter-item");
+            if (c == "all") c = "";
+            for (i = 0; i < x.length; i++) {
+                removeClass(x[i], "show");
+                if (x[i].className.indexOf(c) > -1) addClass(x[i], "show");
+                else x[i].style.display = "none";
+            }
+            // Update buttons
+            var btns = document.getElementsByClassName("filter-btn");
+            for (i = 0; i < btns.length; i++) {
+                btns[i].classList.remove("active");
+            }
+            event.currentTarget.classList.add("active");
+            
+            // Re-trigger layout for grid (simple fix)
+            if(c == "") {
+                for (i = 0; i < x.length; i++) x[i].style.display = "block";
+            } else {
+                for (i = 0; i < x.length; i++) {
+                    if (x[i].className.indexOf(c) > -1) x[i].style.display = "block";
+                }
+            }
+        }
+
+        function addClass(element, name) {
+            var arr1, arr2;
+            arr1 = element.className.split(" ");
+            arr2 = name.split(" ");
+            for (var i = 0; i < arr2.length; i++) {
+                if (arr1.indexOf(arr2[i]) == -1) {element.className += " " + arr2[i];}
+            }
+        }
+
+        function removeClass(element, name) {
+            var arr1, arr2;
+            arr1 = element.className.split(" ");
+            arr2 = name.split(" ");
+            for (var i = 0; i < arr2.length; i++) {
+                while (arr1.indexOf(arr2[i]) > -1) {
+                    arr1.splice(arr1.indexOf(arr2[i]), 1);     
+                }
+            }
+            element.className = arr1.join(" ");
+        }
+
+        // Modal Logic
+        function openModal(artworkName) {
+            document.getElementById('modal').style.display = 'flex';
+            document.getElementById('modal-artwork-name').innerText = "Intérêt pour : " + artworkName;
+            document.getElementById('artwork-input').value = artworkName;
+        }
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        // Language Switcher (Simple implementation)
+        let currentLang = 'fr';
+        function toggleLanguage() {
+            currentLang = currentLang === 'fr' ? 'en' : 'fr';
+            document.querySelectorAll('[data-fr]').forEach(el => {
+                el.innerText = el.getAttribute(`data-${currentLang}`);
+            });
+        }
+
+        // Init
+        filterSelection("all");
+    </script>
+</body>
+</html>
